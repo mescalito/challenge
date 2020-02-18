@@ -95,6 +95,15 @@ class Item implements GameBoardItem {
     return false;
   }
 
+  findDirectionValue(directionKey: string):GameBoardItem | 0 {
+    const value = 0;
+    
+    const currentPiece = this.piece.moves[directionKey];
+    
+
+    return value;
+  }
+
   /** 
    * Standard way in which an item moves to a new piece
    * 

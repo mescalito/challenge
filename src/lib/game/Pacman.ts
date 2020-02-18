@@ -81,17 +81,17 @@ class Pacman extends Item implements GameBoardItem {
   getNextAutoMove(): GameBoardItemMove | boolean {
 
     const { moves } = this.piece;
-    let desiredDirection = "";
+    let desiredDirection = '';
     let maxScore = 0;
-    let directions = ['up', 'down', 'left', 'right'];
-    let reverseDirections = ['down', 'up', 'right', 'left'];
+    const directions = ['up', 'down', 'left', 'right'];
+    const reverseDirections = ['down', 'up', 'right', 'left'];
 
     
     let currIdx = Math.floor(Math.random() * Math.floor(4));
 
     if( moves !== undefined ){
       for( let cnt = 0; cnt < 4; cnt++ ){
-        let currScore = this.getDirectionScore(directions[currIdx], reverseDirections[currIdx]); 
+        const currScore = this.getDirectionScore(directions[currIdx], reverseDirections[currIdx]); 
         if( currScore > maxScore ) {
           desiredDirection = directions[currIdx];
           maxScore = currScore;
@@ -100,7 +100,7 @@ class Pacman extends Item implements GameBoardItem {
       }
     }
 
-    if( desiredDirection !== "" ){
+    if( desiredDirection !== '' ){
       return {piece: moves[desiredDirection], direction: GameDirectionMap[desiredDirection]};;
     }
     
@@ -122,18 +122,22 @@ class Pacman extends Item implements GameBoardItem {
     if( this.direction !== GameDirectionMap[reverseDirection] ){
       // If there is a move available in the desired direction
       if( moves[desiredDirection] ){
-        let testMove = moves[desiredDirection];
+        const testMove = moves[desiredDirection];
         // If the desired direction does not contain a ghost
+
+        if (typeof this.pillTimer !== 'undefined' && this.pillTimer.timer > 0 && this.items[testMove.y][testMove.x].type === GameBoardItemType.GHOST){
+          currScore +=3;
+        }
         if( this.items[testMove.y][testMove.x].type !== GameBoardItemType.GHOST ) {
-          currScore = 1
+          currScore = 1;
         }
         // And if it contains a biscuit increment again
         if( this.items[testMove.y][testMove.x].type === GameBoardItemType.BISCUIT ) {
-          currScore = currScore+1;
+          currScore +=1;
         }
         // But if it contains a pill increment by 2
         if( this.items[testMove.y][testMove.x].type === GameBoardItemType.PILL ) {
-          currScore = currScore+2;
+          currScore +=2;
         }
       }
     }
